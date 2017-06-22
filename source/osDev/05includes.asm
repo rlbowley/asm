@@ -16,7 +16,7 @@
 
 	; Data
 	HELLO_MSG:
-	  db 'hello, World!', 0	;zero terminated hello message
+	  db 'hello, World!', 10, 13, 0	;zero terminated hello message with newline and carriage return
 
 
 	GOODBYE_MSG:
