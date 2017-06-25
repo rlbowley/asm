@@ -2,7 +2,7 @@
 ; A simple boot sector that demonstrates includes and prints out hex
 ;
 [org 0x7c00]			;Tell the assembler where to start in memory
-	;branch!
+	
 	mov dx, 0x1fb6		;store the hex value in dx	
 	call print_hex		;function
 	call print_string
@@ -14,75 +14,46 @@
 	  
 	  mov bx, HEX_OUT
 	  
-	  mov cl, dl	 
-	  and cl, 0x0f
-
-	  cmp cl, 9
-	  jg alpha_pad_b1
-	  add cl, 48
-	  jmp end_pad_b1
-
-
-	  alpha_pad_b1:
-	    add cl, 87
-	  end_pad_b1:
-         
+	  mov ch, dl	 
+	  call shift
+	  call convert_ascii
+	  mov [bx+4], ch
 	  mov [bx+5], cl
-	  
 
-	  ;call print_string
-
-	  mov cl, dl
-	  shr cl, 4
-
-	  cmp cl, 9
-	  jg alpha_pad_b2
-	  add cl, 48
-	  jmp end_pad_b2
-
-	  alpha_pad_b2:
-	    add cl, 87
-	  end_pad_b2:
-
-	  mov [bx+4], cl
-
-	  mov cl, dh	 
-	  and cl, 0x0f
-
-	  cmp cl, 9
-	  jg alpha_pad_b3
-	  add cl, 48
-	  jmp end_pad_b3
-
-
-	  alpha_pad_b3:
-	    add cl, 87
-	  end_pad_b3:
-         
-	  mov [bx+3], cl
-	  
-
-	  ;call print_string
-
-	  mov cl, dh
-	  shr cl, 4
-
-	  cmp cl, 9
-	  jg alpha_pad_b4
-	  add cl, 48
-	  jmp end_pad_b4
-
-	  alpha_pad_b4:
-	    add cl, 87
-	  end_pad_b4:
-
-	  mov [bx+2], cl
-
-
-	  ;call print_string
+	  mov ch, dh
+	  call shift
+	  call convert_ascii
+	  mov [bx+2], ch
+	  mov [bx+3], cl 	  
 
 	  ret
 
+
+	  shift:
+	    shr cx, 4
+	    shr cl, 4
+    	    ret
+
+      	  convert_ascii:
+	    cmp cl, 9
+	    jg plus_87_low
+	    add cl, 48
+	    
+	    check_next_byte:
+	    cmp ch, 9
+	    jg plus_87_high
+	    add ch, 48
+	    jmp end_convert
+
+	    plus_87_low:
+		add cl, 87
+		jmp check_next_byte
+	    
+	    plus_87_high:
+		add ch, 87	
+	  
+	 end_convert:
+	    ret
 	%include "print_string.asm"
 
 	
