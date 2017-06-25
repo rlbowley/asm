@@ -5,13 +5,15 @@
 
 	mov dx, 0x1fb6		;store the hex value in dx	
 	call print_hex		;function
-
+	call print_string
 	jmp $
+
+	
 
 	print_hex:
 	  
 	  mov bx, HEX_OUT
-
+	  
 	  mov cl, dl	 
 	  and cl, 0x0f
 
@@ -22,10 +24,10 @@
 
 
 	  alpha_pad_b1:
-	    add cl, 55
+	    add cl, 87
 	  end_pad_b1:
          
-	  mov [bx], cl
+	  mov [bx+5], cl
 	  
 
 	  ;call print_string
@@ -39,13 +41,45 @@
 	  jmp end_pad_b2
 
 	  alpha_pad_b2:
-	    add cl, 55
+	    add cl, 87
 	  end_pad_b2:
 
-	  shr bx, cl
-	  ;mov [bx], cl
+	  mov [bx+4], cl
 
-	  call print_string
+	  mov cl, dh	 
+	  and cl, 0x0f
+
+	  cmp cl, 9
+	  jg alpha_pad_b3
+	  add cl, 48
+	  jmp end_pad_b3
+
+
+	  alpha_pad_b3:
+	    add cl, 87
+	  end_pad_b3:
+         
+	  mov [bx+3], cl
+	  
+
+	  ;call print_string
+
+	  mov cl, dh
+	  shr cl, 4
+
+	  cmp cl, 9
+	  jg alpha_pad_b4
+	  add cl, 48
+	  jmp end_pad_b4
+
+	  alpha_pad_b4:
+	    add cl, 87
+	  end_pad_b4:
+
+	  mov [bx+2], cl
+
+
+	  ;call print_string
 
 	  ret
 
