@@ -2,7 +2,7 @@
 ; A simple boot sector that demonstrates includes and prints out hex
 ;
 [org 0x7c00]			;Tell the assembler where to start in memory
-
+	;branch!
 	mov dx, 0x1fb6		;store the hex value in dx	
 	call print_hex		;function
 	call print_string
