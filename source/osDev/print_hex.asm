@@ -1,9 +1,8 @@
 ;
-; A simple boot sector that demonstrates includes and prints out hex
+; A general purpose print_hex function taken from the printhex bootloader
 ;
-[org 0x7c00]			;Tell the assembler where to start in memory
 	
-	;mov dx, 0x1fb6		;store the hex value in dx	
+	mov dx, 0x1fb6		;store the hex value in dx	
 	call print_hex		;function
 	call print_string
 	jmp $
@@ -11,7 +10,7 @@
 	
 
 	print_hex:
-	  
+	  ;mov dx, 0x1fb6
 	  mov bx, HEX_OUT
 	  
 	  mov ch, dl	 
@@ -26,6 +25,7 @@
 	  mov [bx+2], ch
 	  mov [bx+3], cl 	  
 
+	  call print_string
 	  ret
 
 
@@ -54,16 +54,9 @@
 	  
 	 end_convert:
 	    ret
-	%include "print_string.asm"
+	;%include "print_string.asm"
 
 	
 
 	HEX_OUT: 
 	  db '0x0000', 0
-;
-;padding and magic number
-;
-
-	times 510-($-$$) db 0
-
-	dw 0xAA55
